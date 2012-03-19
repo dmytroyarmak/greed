@@ -1,12 +1,16 @@
 class DiceSet
+
 	def initialize
 			@values = []
 	end
+
   attr_reader :values
+
   def roll(n)
     @values.clear
     n.times { @values << rand(6) + 1 }
   end
+
 	def score
 	  score = 0
 	  non_score = @values.size
@@ -28,6 +32,7 @@ class DiceSet
 	  non_score = 5 if non_score == 0
 	  [score, non_score]
 	end
+	
 end
 
 class Player
@@ -68,11 +73,11 @@ class GreedGame
 				answer = STDIN.gets
 				if answer =~ /^n/
 					player.add_to_score(current_score)
-					puts "#{player.name} have #{player.score} points."
+					puts "#{player.name} has #{player.score} points."
 					break
 				end
 			end
-		end
+		end #while
 	end
 
 	def start
@@ -91,10 +96,10 @@ class GreedGame
 		# Final round
 		puts "\nFinal round"
 		@player_list.each { |player| step_of_game(player) if player != already_have_above_3000}
-		# Who win?
+		# Who won?
 		winner = already_have_above_3000
 		@player_list.each{ |player| winner = player if player.score > winner.score}
-		puts "\nCongradulation!!! #{winner.name} win with score: #{winner.score}"
+		puts "\nСongratulation!!! #{winner.name} won with score: #{winner.score}"
 	end
 
 end
