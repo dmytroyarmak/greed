@@ -17,29 +17,31 @@ class DiceSet
 	def roll(n)
 		@values.clear
 		n.times { @values << rand(6) + 1 }
-		score
+		@values
 	end
-	def score
-		score = 0
-		no_valuable = @values.size
-		@values.group_by {|n| n}.each do |key, value|
-			quantity = value.length
-			if quantity >= 3
-				score += ( key == 1 ) ? 1000 : key * 100
-				quantity -= 3
-				no_valuable -= 3
+	class << self 
+		def score(values) #Class method
+			score = 0
+			no_valuable = values.size
+			values.group_by {|n| n}.each do |key, value|
+				quantity = value.length
+				if quantity >= 3
+					score += ( key == 1 ) ? 1000 : key * 100
+					quantity -= 3
+					no_valuable -= 3
+				end
+				if key == 5
+					score += quantity * 50
+					no_valuable -= quantity
+				elsif key == 1
+					score += quantity * 100
+					no_valuable -= quantity
+				end
 			end
-			if key == 5
-				score += quantity * 50
-				no_valuable -= quantity
-			elsif key == 1
-				score += quantity * 100
-				no_valuable -= quantity
-			end
-		end
-		no_valuable = 5 if no_valuable == 0
-		return score, no_valuable
-	end	
+			no_valuable = 5 if no_valuable == 0
+			return score, no_valuable
+		end	
+	end
 end
 
 class GreedGame
@@ -53,7 +55,7 @@ class GreedGame
 		puts "\n#{player.name}, It's your turn! Your score: #{player.score}"
 		number_of_throws = 5
 		while true
-			throw_score, number_of_throws = @dice_set.roll(number_of_throws)
+			throw_score, number_of_throws = DiceSet.score(@dice_set.roll(number_of_throws))
 			step_score += throw_score
 			puts "\t#{player.name} throw #{@dice_set.values} (#{throw_score}). Score of step: #{step_score}!"
 			if throw_score == 0
