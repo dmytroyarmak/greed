@@ -1,50 +1,44 @@
-class DiceSet
-
-	def initialize
-			@values = []
-	end
-
-  attr_reader :values
-
-  def roll(n)
-    @values.clear
-    n.times { @values << rand(6) + 1 }
-  end
-
-	def score
-	  score = 0
-	  non_score = @values.size
-	  @values.group_by {|n| n}.each do |key, value|
-	    len = value.length
-	    if len >= 3
-	      score += (key == 1)? 1000 : key * 100
-	      len -= 3
-	      non_score -= 3
-	    end
-	    if key == 5
-	      score += len * 50
-	      non_score -= len
-	    elsif key == 1
-	      score += len * 100
-	      non_score -= len
-	    end
-	  end
-	  non_score = 5 if non_score == 0
-	  [score, non_score]
-	end
-	
-end
-
 class Player
-	attr_reader :name
-	attr_reader :score
-	def initialize(a_name)
-		@name = a_name
+	attr_reader :name, :score
+	def initialize(name)
+		@name = name
 		@score = 0
 	end
 	def add_to_score(n)
-			@score += n
+		@score += n
 	end
+end
+
+class DiceSet
+	attr_reader :values
+	def initialize
+		@values = Array.new
+	end
+	def roll(n)
+		@values.clear
+		n.times { @values << rand(6) + 1 }
+	end
+	def score
+		score = 0
+		no_valuable = @values.size
+		@values.group_by {|n| n}.each do |key, value|
+			len = value.length
+			if len >= 3
+				score += (key == 1)? 1000 : key * 100
+				len -= 3
+				no_valuable -= 3
+			end
+			if key == 5
+				score += len * 50
+				no_valuable -= len
+			elsif key == 1
+				score += len * 100
+				no_valuable -= len
+			end
+		end
+		no_valuable = 5 if no_valuable == 0
+		return score, no_valuable
+	end	
 end
 
 class GreedGame
