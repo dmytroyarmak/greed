@@ -54,7 +54,7 @@ class GreedGame
 		step_score = 0
 		puts "\n#{player.name}, It's your turn! Your score: #{player.score}"
 		number_of_throws = 5
-		while true
+		loop do
 			throw_score, number_of_throws = DiceSet.score(@dice_set.roll(number_of_throws))
 			step_score += throw_score
 			puts "\t#{player.name} throw #{@dice_set.values} (#{throw_score}). Score of step: #{step_score}!"
@@ -64,14 +64,14 @@ class GreedGame
 			end
 			if step_score >= 300	
 				print "\t\tYou have #{number_of_throws} throw(s)! Continue? (y/n): "
-				answer = gets.downcase
-				if answer =~ /^n/
+				answer = gets.chop
+				if answer =~ /^n/i
 					player.add_to_score(step_score)
 					puts "#{player.name} already has #{player.score} points."
 					break
 				end
 			end
-		end #while
+		end #loop
 	end
 	def play
 		puts "Game started"
